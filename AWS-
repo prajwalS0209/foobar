@@ -1,0 +1,375 @@
+AWS-
+
+Ec2 instances:
+	placements group : 
+	- cluster
+	- spread
+	- partition   
+
+Elastic Netwrok Interface(ENI):
+	- its AZ bound.
+
+Ec2 hibernation: it is the process where the instance's RAM is stored in the EBS volume for the faster rebooting. 
+	- to enable this the root volume should be enabled as the RAM data is stored on ebs.
+  	- supported by ondemand, reserved 
+
+smallest instance: t2.nano, 0.5gbMEM and 1vCPu
+largest instance: u-12tb1.112xlarge, 12.3TBMEM and 448vCPu
+
+
+AMI: 
+	- Amazon machine image, used for creating the instance.
+	- Ami is regional bound once you create an AMi and you cannot use it on diffrenet region.
+
+
+EBS:
+ 	- one EBS volume cannot have multiple instances(only for io1 and io2 family ebs volumes). it is called EBS multi attach feature.
+ 	- one instance can have multiple EBSs
+ 	- delete on termination is available
+ 	- it is AZ bound.
+
+ 	EBS snapshot features:
+ 	 - EBS Snapshot Archieve cheaper - 24/72hrs for restoring
+ 	 - recycle bin for EBS snapshot
+ 	 - fast snapshot restore
+
+ 	retenional rule: used by snapshot for saving the snapshots from accedental deletion.
+
+	EBS volume types:
+		6 types:
+			- gp2, gp3
+			- io1, io2
+			- HDD (st1)/(sc1) cannot be used as boot volumes for instances 
+
+	encrypting the unencrypted volume:
+		this can be achieved by
+		- taking the snapshot of the uncrypted volume
+		- copy the snapshot with encryption option enabled 
+		- creating the volume with the encrypted snapshot and attaching this to the instance. 
+
+EFS: Elastic File Storage
+	- this can be created and attached to multiple instances
+	- can be created regionally and one az also		
+
+ELBs:
+	- classic Load balancer - old genration ELB
+	- Application Load balancer, - works with HTTP and HTTPs requests.
+	- Network Load balancer - works with TCP, TLS, UDP, and are used for high performance and low latency
+	- Gateway Load Balancer - used with virtual appliances like firewall to monitor or block the traffic from unauthorized 	network.
+
+
+	Comparison of Services Across Load Balancers
+	Target Type	   	 Application Load Balancer	Network Load Balancer	Gateway Load Balancer	Classic Load Balancer
+	EC2 Instances			✅								✅						❌						✅
+	IP Addresses			✅								✅						✅						❌
+	AWS Lambda				✅								❌						❌						❌
+	ECS/EKS Containers		✅								✅						❌						❌
+	On-prem Servers			✅								✅						✅						❌
+
+
+OSI modles:
+	layer1 : physical layer - for application routing 
+	layer2 : data link layer
+	layer3 : network layer
+	layer4 : transport layer
+	layer5 : session layer
+	layer6 : the presentaion layer
+	layer7 : the application mlayer
+
+sticky session (session affinity):
+	it part of the ELB helps the user to stick to the same instance throuhg out the time frame mentioned in ELB. This is Achieved using cookies
+	this only works wit ALB, NLB and CLB not with GWLB
+
+	two types:
+		- load balancer generated cookies
+		- application based cookies / cutom cookies
+
+	cross zone loadbalancing:
+		enabled: here the load balancers distribute the requests to all ec2s in diffrenent azs. 
+		disabled: here the load balancers only distributes the requests withi the same az where the alb is located.
+
+
+		for ALB crosszone will be enabled by default.
+			NLB and GWLB you can enable.
+
+
+SSl and TLS certs:
+	SNI - Serve Name Indication - used to load multiple tls certificates 
+
+
+Connection Draining;
+	it is the time given to the instance to complete all the requests assigned by the ELBs before draining/stopping, but all the new requests will be fordwared to different instance.
+
+
+AutoScaling Group:
+	Here in this the instances are terminated based on their billing period, only if no termination policy is created.
+
+	Scaling Policy: these are the policy where the scaling happens in ASG. 
+		- cpu utilization, 
+		- cloud watch triggers.
+
+	Cooling Period: it is the period when the ASG doesnot create any instaces to stabalize the metrics. default is 300seconds.
+
+
+RDS(Relational Database):
+	its aws managed service, where we dont have any access to the underlaying os or ec2 instance.
+	its a SQL based database service,  
+	storage autoscaling
+
+	RDS Read Replica: It is a concept in AWSRDS where the main Db has its own replica for reading purpose, in this case the main db will be free from the load which helps in performance.
+	- uses async reolication
+	- can be used for analytics purpose.
+	- same region replicas are completely free, where as cross region replicas are priced
+
+	RDS Multi AZ: it is a concept for creating the scondary DB in diffrent AZ for standby. This cannot be written or read by the user. But this  
+	will be made as primary if something happens with the primary DB.
+	- uses sync replication
+	Note: ReadReplicas can 	
+
+	RDS Custom:
+	its a user managed service, where we have access for os and the ec2 instance and it only works with oracle and microsoft sql
+
+	Amazon Aurora:
+	- is an amazons own database engine that supports sql dbs 
+	- it has 5x performance over mysql and 3x performance over postgres.
+	- if you start with 10gb and as your data gets bigger and bigger the aurora increases itself upto 128TB.
+	- it can have upto 15 read replicas.
+	- The Read Replicas in Amazon Aurora has auto scaling feature so that, if theres too much traffic 
+	- its 20% more costlier than a normal SQL dbs 
+	- you can get the backup or restore the backup at any time frame.
+
+	- Amazon Aruora has writer, reader, and custom endpoints
+		writer endponit is to write into the db
+		reader endpoint is to read from the db
+		custom endpoint is to write custom queries fkr particular db instance.
+			Eg: if theres any high instance in the readreplicas that can be used with custom endpoints for running high quaries. 
+
+	- Aurora also supports serverless v2, machine learning.
+	- creating/cloning the new aurora db from the existing db or cloning is faster than the restoring.
+
+	RDS security:
+	- ssh access is only available for the RDS custom as it has access for underlaying instance and os
+	- security groups, IAM authentication, 
+
+	RDS Proxy:
+	- Its the layer that sits upon the rds db instance, so all the traffic are passed by the rds poxy rather than directly conected to the rds db instance. which helps in the managing the stress and load on the rds db instance.
+
+
+Elastic Cache:
+	- its a managed service for redis and memcached
+	- cache hit: this is a situation when data is retrived from the cache server.
+	  cache miss: this is a situatin when the data is unavilable in cache server. then the application retrives data from db and write it to the cache server. 
+	  Important ports:
+
+		FTP: 21
+		SSH: 22
+		SFTP: 22 (same as SSH)
+		HTTP: 80
+		HTTPS: 443
+	
+	 RDS Databases ports:
+		PostgreSQL: 5432
+		MySQL: 3306
+		Oracle RDS: 1521
+		MSSQL Server: 1433
+		MariaDB: 3306 (same as MySQL)
+		Aurora: 5432 (if PostgreSQL compatible) or 3306 (if MySQL compatible)
+
+DNS(route 53):
+
+	url =   https://api.www.example.com.
+		     <----------------
+		. = root level 
+		.com. = Top level Domain
+		exmaple.com. = secondary level domain
+		wwww.exmaple.com. = sub domain
+		api.example.com. = fully qualified domain name 
+	    https = protocol
+
+	Record types:
+		A - maps to IPv4
+		AAAA - maps to IPv6
+		CNAME - maps hostname to another hostname
+		NS - name servers 
+
+	Hosted Zones:
+		contains the info on how to route traffic to domains and subdomains. 
+		1. Public Hosted Zone:
+				contains the info on how to route the traffic for a domain on internet
+		2. Private Hosted Zone:
+				contains the info on how to route traffic on a private VPCs
+
+	TTL : Time to live,
+		it is used to cache your record to the client machine.
+
+	CName and Alias:
+	- If theres any alias set to the domain name. ttl cannot be set as the route53 default sets itself.
+	- Alias cannot be set to EC2 instance DNS name.
+	- alias is always A type record.
+
+
+	Routing Policies:
+	- simple: it is a basic routing policy, 
+		it has single value and multi value 
+	- weighted: here the dns queris are transfered based in the weight set to a value
+	- latency based: base on the closest region the route id transfered.
+	- health Checks: use to check the health of the public resources, can be used to check the health of the health check
+	- failover: once the health checks are failed the dns query is routed to secondary instance. by default query is routed to primary instance.
+	- geolocation: routing the dns query based on the geolocation, but there should be default as well.
+	- geoproximity: based on the bias. if a region has more bias then the traffic is routed to that region.
+	- IP based: routed based on the IP range.
+
+Elastic BeanStalk:
+	- Here this service gives you the developer centric view for deployig the service on AWS
+	- its a managed service, all the services that are used by this service are managed by the AWS itself. all it requires is code of the applcation.
+	- but we can still have the control over the configurations.
+
+
+S3:
+	- simple storage service 
+	- its the main service of AWS, used to upload files of any size. Each uploads are created as objects. each object can be upto 5TB.
+
+	s3 static website hosting:
+		- here you can host an application, on hosting you will get an endpoint which servers index,html by default.
+
+	s3 Versioning:
+		- Once this option is enabled, each new uploads into the object are created with new version.
+
+	s3 Replication:
+		- there are two types of replications 
+			- CRR : Cross Region Repication - replicating the bucket from one region to another region.
+			- SRR : Same Region Replication - replicating the bucket within same region.
+		- once replicaton is enabled for the bucket, only newly created objects are replicated to the destined bucket. 
+		- make use of s3 batch replication for replicating older objects in a s3 bucket.
+
+	s3 storage classes;
+		- s3 stanard genral-prupose  - general pupose
+		- s3 stanard infrequent access - used for infrequnt access which is multi az
+		- s3 onezone infrequent access - used for infrequent access, which is only for one zone
+		- s3 glacier instant retrival  - retrival time is in seconds/immediate
+		- s3 glacier flexible retrival - retrival time is min to hours
+		- s3 glacier deep retrival - retrival time is more tha 12hrs 
+		- s3 intelligent tiering - used for constantly changing the class of the s3 object.
+
+	s3 requesters pay:
+		- it is a feature when the requesters are charged for downloading the data from s3 bucket. the requester should not be anonymous.
+
+	s3 event notification:
+		- it is used to send notifications for the events performed on aws s3 bucket.
+		- you can use SNS, SQS, and lamda function.
+		- you can also use  Amazon eventbridge service. where you can send message upto 18 different amazon services.
+
+	s3 performance: 	
+		- high throughput: it can support upto 3500 put/post/delete requests per second and 5000 get/head requests per second.
+		- low latency: s3 supports low latency.	
+		- transfer Accerleration: this make use of edge locations for uploading the files. 
+		- Multi Part Upload: it is used to Accelerator the speed of the file by partitioning it. Recommended for objects >100MB, if any upload gets. failed aws itself will delete the failed upload after a certain time. whichi reduces the cost and storage. Here If any part of the file is failed. no need to reupload the entire object. you can just reupload the failed part.
+
+	s3 Batch Operartions:
+		- used to perform tasks on a multiple objects(millions to billions) at a single request.
+	
+	s3 object locking:
+		- locking the object for unnecessary deleting of the object for a particular time. 
+		- types:
+			- governence : with suitable IAM permissions can overwrite or delete the object for a fixed time
+			- compilence : cannot delete the object for a fixed time
+			- legal hold : cannot delete the object, but it doesnot have any fixed time, can be removed manually.
+
+	s3 securities:
+	Object Encryption in AWS:
+		- Server Side Encryption with amazon s3 managed keys (SSE-S3) - default 
+		- Server Side Encryption with AWS KMS (SSE-KMS)
+		- Server Side Encryption with customer provided key (SSE-C). 
+		- Client Side Encryption. 
+
+	CORS:
+		- Cross Origin Resource Sharing.
+			Origin = protocol + domain + port
+		- allowing the requests from on server to another server  
+
+	s3 MFA delete:
+		- authenticate with MFA devices for deletetion protection of objects 
+		- need to use AWS cli or AWS SDK 
+
+	s3 Access logs:
+		- used to log the metrics peformed on the s3 bucket.
+
+	s3 presigned url:
+		- it is used to share a private bucket url to someone to access only for limited time. you can cutomize the time.
+
+	s3 Access Points:
+		- Used to create an Access point for the particular object. with specific permissions,  
+		- can be used to vpc origin also. where the instance in vpc can connect to the s3 bucket object with out access internet.
+
+	s3 object lambda:
+		- used to execute a function on a access point. to modify the bucket data.
+
+Cloud Front (CDN):
+	-CloudFront is a Content Delivery Network (CDN) that delivers static and dynamic web content, videos, and APIs with low latency by caching them at edge locations around the world.
+	- it can be use to redirect to the s3 buckets with certian s3 bucket policies.
+	- it can be used with ELB and EC2 but the instances's security group should allow the public access. where as in ELB the instance can be private and only allow the traffic coming from ELB. 
+
+	cloud front geo restrictions:
+	-  here you can control the access for the disrtubation based on the contries. you can allow and deny for country.
+
+
+	cloud front price classes:
+	- price class all: access for all the edge locations, more expensive and best performance.
+	- price class 200 : access for lower price edge locations. 
+	- price class 100 : access for least high priced edge locations.
+
+	cloudfront cache invalidation:
+	- here when the files are updated in the origin. you do a cloudfront invalidation so that when ever someone access the cloud front they get the newer files instead pf the old files which were cached in edge location.
+
+
+Global Accelerator:
+	Global Accelerator is a global traffic manager designed to improve the availability and performance of your application by routing traffic to optimal AWS endpoints (such as EC2, Load Balancers, or containers) across regions.
+
+AWS Snow Family:
+	- it is a service where you can get the hardware of the storage to migrate the data into s3, for which you need to configure the snowball with instance type, encryption key etc.. and once the data is uploaded to the snowball you send ot back to aws 
+	- you cannot directly upload the data to s3 glacier, but need to upload the data to s3 first and then create a life cycle policy to move the bucket to glacier.
+	- snowball cone HDD - 8TB HDD
+	- snowball cone SDD - 14TB SSd
+	- snowball wdge - to transfer in TBs and PBs
+AWS FSx:
+- its a 3rd party filesystem managed by AWS 
+	FSx for Windows File Server - Windows-based workloads.
+	FSx for Lustre - High-performance computing.
+	FSx for NetApp ONTAP - Advanced data management.
+	FSx for OpenZFS - ZFS-based applications.
+
+
+AWS Storage Gateway:
+	this service works as a bridge between on premises data and cloud data.
+	- s3 file gateway: Provides file-based storage to on-premises applications while storing files as objects in Amazon S3.
+	- fsx file gateway :
+	- volume gateway
+	- tape gateway
+
+Amazon Transfer family:
+	- Aws tranfer family is used for transfering the files into the EFS or S3 without using the APIs, you can make use of the Route53 for creating dns which points towards the  AWS transfer family, and later you can make use of IAM roles for adding the files to the s3 or EFS.
+
+DataSync: 
+	used to symc the data within the AWS services 
+
+SQS: 
+	SQS Queue:
+	 - it is the oldest service of aws, 
+	 - it is used by decoupling applications 
+	 - the messages should be less than 256KB
+	 - the retention period is min 4days and max 14days	
+	 - it works with the concept of producers and consumers,  where producers are the messages produced by the sdk or api. and consumers might be aws services like lambda function, ec2 anything. But once the message is consumed by the consumers the message is deleted by the consumer api in SQS.
+	 - once a consumer signals for the message SQS can send upto 10 messages at once.
+
+	SQS message visibility Timeout:
+	 - it is a concept where the message will be invisible for the other consumers to process, hence already one consumer is processing. By default it will be 30secs. you can increase or decrease the time, it will be then visible to other consumers once the visiibility time expiers.
+	
+	SQS Long Polling:
+	- when a consumer requests for messages from queue, it can wait little more for the messages of there are none, this can be achievedd using increaseing or decreasing the waitimeperiod attribute in API. the value can varry from 1sec to 20sec. 
+
+	SQS FIFO(First In First Out)queue:
+	- here the messages are consumed the same order as they were produced.
+
+	SQS + AutoScaling Group:
+	- 
+
