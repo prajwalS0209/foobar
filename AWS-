@@ -731,8 +731,30 @@ SNS(Simple Notification Service):
 
 	SNS + SQS Fan out pattern:
 
-	fan Out messaging:  it is a messagin pattern 
+	fan Out messaging: (one-many pattern)
 	Use Case: 
 	- when a producer wants to send message to multiple SQS Queues, SNS Topic can be integrated with the producers as there are chances of loosing the data from the Queue, you can add multiple SQS Queues as a subscribers to the SNS topic. 
-	- by modifying security group 
+	- By modifying the security group you can SNS Topic in one region can send messages to SQS Queue in different region.
+	- you can even enable filter policy, to filter out the messages. 
+
+Kinesis Datastream:
+Note: keyword is realtime collect and storeing data
+	- this is the service that collects the realtime data and process
+	- two types:
+		- Provisioned mode: here we need to predefine the shards on the data stream, u will pay for per shard/per hour, scaling should be done manually
+		- On-demand mode: here we do not need to define the capacity, scaling will happen based on the last 30days activities. pay per stream i.e, the amt of data that goes in per hour.
+	- data can be stored upto one year
+
+Amazon Data Firehose:
+Note: key point is near realtime
+	- it is used for loading stream data to endpoints like (aws s3, redshift, 3rd party like splunk, datadog and ypuo can also use custom http endpoint).
+	- it auto sclaes itself as it is fully managed service.
+
+
+Amazon MQ: 
+	- just inncase if your application  isn't clud native and if you use messaging brokers like SMTP, etc.. and donnt not want to change it to SQS or SNS, you can use Amazon MQ.
+	- It is a managed message broker, 
+	- since it runs on serer there might be server issues, 
+	- it also comes with the features like Queueing (just like SQS) and Topics (like SNS).
+	- it also supports multi AZ for failover(one as main, and another as the standby),all you need to do is attach a EFS for the servers, incase one AZ goes down the standby Amazon MQ will still have all the queus and topics.
 
