@@ -696,7 +696,7 @@ SQS:
 	 - it works with the concept of producers and consumers,  where producers are the messages produced by the sdk or api. and consumers might be aws services like lambda function, ec2 anything. But once the message is consumed by the consumers the message is deleted by the consumer api in SQS.
 	 - once a consumer signals for the message SQS can send upto 10 messages at once.
 
-	 SQS Security:
+	SQS Security:
 	 - you can use SSE-SQS or SSE-AWS KMS for encryption. 
 	 - it also has SQS policies where you can define the access 
 
@@ -744,6 +744,7 @@ Note: keyword is realtime collect and storeing data
 		- Provisioned mode: here we need to predefine the shards on the data stream, u will pay for per shard/per hour, scaling should be done manually
 		- On-demand mode: here we do not need to define the capacity, scaling will happen based on the last 30days activities. pay per stream i.e, the amt of data that goes in per hour.
 	- data can be stored upto one year
+	- its not supported as the subscriber to SNS topic
 
 Amazon Data Firehose:
 Note: key point is near realtime
@@ -752,9 +753,85 @@ Note: key point is near realtime
 
 
 Amazon MQ: 
-	- just inncase if your application  isn't clud native and if you use messaging brokers like SMTP, etc.. and donnt not want to change it to SQS or SNS, you can use Amazon MQ.
+	- just incase if your application isn't cloud native and if you use messaging brokers like SMTP, etc.. and donnt not want to change it to SQS or SNS, you can use Amazon MQ.
 	- It is a managed message broker, 
 	- since it runs on serer there might be server issues, 
 	- it also comes with the features like Queueing (just like SQS) and Topics (like SNS).
 	- it also supports multi AZ for failover(one as main, and another as the standby),all you need to do is attach a EFS for the servers, incase one AZ goes down the standby Amazon MQ will still have all the queus and topics.
+
+
+Containers on AWS:
+ECS: Elastic Conatiner Service
+	- EC2 Launch type:
+	  - when you launch containers on ECS cluster it creates something called as ECS tasks
+	  - while using ECS cluster(ECS launch type) the infrastructure should be maintained by us and each instance should be insatlled wiht ECS agent. these ECS agent are  responsible for regestiring  the ECS cluster. byt 
+	  - AWS takes care of stopping and starting the instances 
+
+	- Fargate Launch type:
+	  - this is the second launch type here you dont provision the infrastructure, AWS takes care of the infrastructure. Everything is serverless here.
+
+	- Instance Profiles roles
+	  - Works with EC2 launch type only
+	  - this profiles are used by the ECS agents inside the instance to make API calls for ECR, cloudwatch logs, ECS etc...
+
+	- ECS task role:
+	  - this roles are used by the ECS tasks only.
+	  - each task can have seperate role.
+	  - this roles are defined in task definations.
+
+	- ECS with load balancers;
+	  - ELB's can also be used for ECS by placing them infront of the ECS cluster.
+	  - ALB(Application Load Balancer) can be used for many uses as it supports both the launch types
+	  - NLB(Network Load Balancer) can be used with certain scenarios like linking it with AWS Private link.
+	  - CLB(Classic Load Balancer) is not recommended as it doesnot support fargate.
+
+	- Volumes in ECS:
+	  - Amazon EFS is the recommended filesystem with the ECS Cluster. 
+	  - S3 cannot be used as the filesystem as it cannot be mounted as a file system.
+
+
+	- ECS Service AutoScaling:
+	  - used for increasing or decreasng the desired number of ECS tasks
+	  - it is not same as Auto Scaling for Ec2 instances.
+	  - it makes use fo AWS Application Auto Scaling feature underneath
+	  - metrics from CPU utilization, metrics form RAM utilization, or ALB counts per ECS tasks can be used for scaling od the ECS tasks.
+	  - there are three type of 
+	  	- target tracking:
+	  	- step sclaing:
+	  	- scheduled scaling: 
+
+	 - Auto Scaling on EC2 launch type:
+	 	- there are two types
+	 		- Auto Scaling Group Scaling: here based on the cloud metrics the ec2 instances are added.
+	 		- ECS cluster capcity provider: here based on the usage of resources like cpu and memory, inatances are added. this is the smarter way.
+
+ECR: Elastic Container Registr
+	- it is registrty ehere you can store the images just like docker hub, 
+	- it comes with extra features like scanning the image for vulnerabilities, version etc..
+
+
+
+EKS (Elastic Kubernetes Service):
+	- this is another way for using containers Architecture. ut make use of kubernetes which is open source,
+	- node group types in EKS:
+		- managed node group: Here you don't need to manage the node, AWS takes care of this thing.
+		- self managed node group: here you need to create and manage the ndoe group, need ti configure the node groupnusing AMI, 
+			- can use EKS optimised node group managaed by AWS
+			- can create one for ourselves
+		- Fargate: here no need to create and maintain the nodes.
+
+
+
+	EKS Data Volumes:
+	- to use this service need to create sterge class manifest in the cluster
+	- it creates CSI (container Storage Interface).
+
+	it supports:
+		- EBS
+		- EFS (this is the only filesystem that supports Fargate Arch)
+		- FSx for luster
+		- FSx for Netapp Ontap
+
+
+		
 
