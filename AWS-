@@ -764,11 +764,11 @@ Containers on AWS:
 ECS: Elastic Conatiner Service
 	- EC2 Launch type:
 	  - when you launch containers on ECS cluster it creates something called as ECS tasks
-	  - while using ECS cluster(ECS launch type) the infrastructure should be maintained by us and each instance should be insatlled wiht ECS agent. these ECS agent are  responsible for regestiring  the ECS cluster. byt 
+	  - while using ECS cluster(ECS launch type) the infrastructure should be maintained by us and each instance should be insatlled with ECS agent. these ECS agents are  responsible for regestiring the ECS cluster. 
 	  - AWS takes care of stopping and starting the instances 
 
 	- Fargate Launch type:
-	  - this is the second launch type here you dont provision the infrastructure, AWS takes care of the infrastructure. Everything is serverless here.
+	  - this is the second launch type here you dont provision the infrastructure, AWS takes care of the infrastructure. Everything is serverless here. scaling.
 
 	- Instance Profiles roles
 	  - Works with EC2 launch type only
@@ -868,9 +868,34 @@ AWS Lambda;
 	- usually lambda lifecycle has 3 steps init >> invoke >> shutdown. here the init(initializing) step may take linger time. 
 	- to prevent this we make use of snapstart feature, whenver there is a newer version of the function it pre-initialize. it even takes the snapshot of the disk and memory, for lower latency usage.
 	
-	cloudFront and LambdaEdge Functions:
-	- These are the functions where you 
-   
+
+Edge Functions: These are the function that gets executed at the edge locations before reaching the application or to the users.
+	 - they are used for running the functions close to users so that there can be lower latency.
+	 - these functiions xan be written only once in a region, it gets updated to all the locations 
+
+	cloudFront Functions:
+	- High Performance and High Scaling for viewer response.
+	- it only supports javascript functions i.e, nodeJs
+	- it can be used to scale upto million requests per second.
+	- max execution time is <1ms
+
+	Lamda@edge:
+	- it supports pyton and nodejs functions i.e,
+	- it can be used to scale upto thounsands requests per second.
+	- max execution time is 5 - 10 seconds 
+
+	Lamda in VPC:
+	- by default they are launched outside the user created VPC. but in AWS owned VPC.
+	- due to this, the lambda function cannot access the services inside the user created VPCs.
+	- to launch your lambda inside the VPC, you need to add the VPC id, subnets..etc, which will create the ENI, through which the functions can communicate to the services inside the private VPC.
+
+	Lamda with RDSProxy:
+	- To work with this, lambda functions should be inside the VPC, as RDS proxy cannot be accessed through public VPC.
+	- Even IAM authentiation can be enabled 
+
+	Lambda can be invoked within the RDS and Arora. 
+	- this needs to be setup inside RDS instance. as RDS instance is the one that will be invoking the Lambda functions.
+	- to ensire this works, RDS instance should have all the necessary permissions attached to the IAM roles.
 
 
 
