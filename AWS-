@@ -1,4 +1,4 @@
-AWS-
+AWS SAA
 
 By default, Theres a cost for data to transfers from one Az to anothwe AZ
 making use of VPC endpoints helps in cost optimization, by reducing data ttransfer costs
@@ -738,7 +738,7 @@ SNS(Simple Notification Service):
 	- you can even enable filter policy, to filter out the messages. 
 
 Kinesis Datastream:
-Note: keyword is realtime collect and storeing data
+Note: key point is realtime collect and storing data
 	- this is the service that collects the realtime data and process
 	- two types:
 		- Provisioned mode: here we need to predefine the shards on the data stream, u will pay for per shard/per hour, scaling should be done manually
@@ -748,8 +748,8 @@ Note: keyword is realtime collect and storeing data
 
 Amazon Data Firehose:
 Note: key point is near realtime
-	- it is used for loading stream data to endpoints like (aws s3, redshift, 3rd party like splunk, datadog and ypuo can also use custom http endpoint).
-	- it auto sclaes itself as it is fully managed service.
+	- it is used for loading stream data to endpoints like (aws s3, redshift, 3rd party like splunk, datadog  can also use custom http endpoint).
+	- it auto sclaes itself as it is fully AWS managed service.
 
 
 Amazon MQ: 
@@ -763,11 +763,13 @@ Amazon MQ:
 Containers on AWS:
 ECS: Elastic Conatiner Service
 	- EC2 Launch type:
+	  - Runs containers on self managed cluster
 	  - when you launch containers on ECS cluster it creates something called as ECS tasks
 	  - while using ECS cluster(ECS launch type) the infrastructure should be maintained by us and each instance should be insatlled with ECS agent. these ECS agents are  responsible for regestiring the ECS cluster. 
 	  - AWS takes care of stopping and starting the instances 
 
 	- Fargate Launch type:
+	  - Runs containers on AWS managed servers
 	  - this is the second launch type here you dont provision the infrastructure, AWS takes care of the infrastructure. Everything is serverless here. scaling.
 
 	- Instance Profiles roles
@@ -806,7 +808,7 @@ ECS: Elastic Conatiner Service
 	 		- ECS cluster capcity provider: here based on the usage of resources like cpu and memory, inatances are added. this is the smarter way.
 
 ECR: Elastic Container Registrar
-	- it is registry ewhere you can store the images just like docker hub, you can enable private and public access in this.
+	- it is registry where you can store the images just like docker hub, you can enable private and public access in this.
 	- it comes with extra features like scanning the image for vulnerabilities, version etc..
 
 
@@ -820,7 +822,7 @@ EKS (Elastic Kubernetes Service):
 			- can create one for ourselves
 		- Fargate: here no need to create and maintain the nodes.
 
-Fargate: it is a serverless compute Engine for containers, where you dont create or manage the EC2 nodegroups. ot automatically provisions the required compute resources. 
+Fargate: it is a serverless compute Engine for containers, where you dont create or manage the EC2 nodegroups. it automatically provisions the required compute resources. 
 
 
 	EKS Data Volumes:
@@ -864,14 +866,14 @@ AWS Lambda;
 	- to fix this we provision the concurrency value before function is invoked, which reduces the latency.
 
 	lambda snapstart:
-	- it is a feature where it helps in the preformance of the lambda function. by 10x ofr java, python and .NET
-	- usually lambda lifecycle has 3 steps init >> invoke >> shutdown. here the init(initializing) step may take linger time. 
+	- it is a feature where it helps in the preformance of the lambda function. by 10x for java, python and .NET
+	- usually lambda lifecycle has 3 steps init >> invoke >> shutdown. here the init(initializing) step may take longer time. 
 	- to prevent this we make use of snapstart feature, whenver there is a newer version of the function it pre-initialize. it even takes the snapshot of the disk and memory, for lower latency usage.
 	
 
 Edge Functions: These are the function that gets executed at the edge locations before reaching the application or to the users.
 	 - they are used for running the functions close to users so that there can be lower latency.
-	 - these functiions xan be written only once in a region, it gets updated to all the locations 
+	 - these functiions can be written only once in a region, it gets updated to all the locations 
 
 	cloudFront Functions:
 	- High Performance and High Scaling for viewer response.
@@ -879,17 +881,17 @@ Edge Functions: These are the function that gets executed at the edge locations 
 	- it can be used to scale upto million requests per second.
 	- max execution time is <1ms
 
-	Lamda@edge:
+	Lambda@edge:
 	- it supports pyton and nodejs functions i.e,
 	- it can be used to scale upto thounsands requests per second.
 	- max execution time is 5 - 10 seconds 
 
-	Lamda in VPC:
+	Lamdba in VPC:
 	- by default they are launched outside the user created VPC. but in AWS owned VPC.
 	- due to this, the lambda function cannot access the services inside the user created VPCs.
 	- to launch your lambda inside the VPC, you need to add the VPC id, subnets..etc, which will create the ENI, through which the functions can communicate to the services inside the private VPC.
 
-	Lamda with RDSProxy:
+	Lambda with RDSProxy:
 	- To work with this, lambda functions should be inside the VPC, as RDS proxy cannot be accessed through public VPC.
 	- Even IAM authentiation can be enabled 
 
