@@ -1,0 +1,17 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: this is a practice Cloud formation template
+
+Parameters:
+  s3BucketName: 
+    Description: please give a unique name for the bucket
+    Type: String
+
+Resources:
+  s3Bucketpractice:
+    Type: AWS::S3::Bucket
+    Properties: 
+      BucketName: !Ref s3BucketName
+      Tags:
+        - Key: name
+          Value: practice-bucket
