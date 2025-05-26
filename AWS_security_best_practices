@@ -1,0 +1,50 @@
+🔐 Identity and Access Management (IAM)
+Enable MFA (Multi-Factor Authentication) for all users, especially root.
+
+Avoid using the root account—create individual IAM users with least privilege.
+
+Apply the Principle of Least Privilege (PoLP)—grant only the permissions needed.
+
+Use IAM roles instead of embedding credentials in apps (e.g., for EC2, Lambda).
+
+Rotate credentials regularly—use AWS Secrets Manager for managing secrets.
+
+🔒 Data Protection
+Encrypt data at rest and in transit using AWS services (e.g., S3, EBS, RDS with KMS).
+
+Use AWS Key Management Service (KMS) to manage encryption keys securely.
+
+Enable S3 bucket encryption and block public access unless required.
+
+🛡️ Network Security
+Use Security Groups and NACLs to control inbound and outbound traffic.
+
+Restrict public access to EC2 instances and S3 buckets.
+
+Use VPC Flow Logs to monitor traffic and identify anomalies.
+
+Deploy workloads in private subnets when possible.
+
+Use AWS Shield and WAF to protect against DDoS and web attacks.
+
+🔍 Monitoring & Logging
+Enable CloudTrail in all regions to log all account activity.
+
+Use CloudWatch for alarms and logs to detect abnormal activity.
+
+Set up AWS Config to track configuration changes and compliance.
+
+🔄 Compliance and Governance
+Use AWS Organizations and SCPs (Service Control Policies) to enforce policies across accounts.
+
+Enable GuardDuty for intelligent threat detection.
+
+Use Inspector / Security Hub to scan for vulnerabilities and view findings in one place.
+
+🧪 Operational Practices
+Regularly audit permissions and IAM policies.
+
+Apply security patches promptly on EC2 instances and containers.
+
+Back up data regularly using services like AWS Backup or versioning in S3.
+
