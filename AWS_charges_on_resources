@@ -1,0 +1,78 @@
+🕒 Services Charged Per Hour (or per second, but effectively billed for usage duration)
+These services typically charge based on how long a resource is running (often prorated per second but listed as per-hour pricing):
+
+Compute:
+Amazon EC2 (Elastic Compute Cloud)
+
+Amazon ECS (Elastic Container Service) on EC2
+
+Amazon EKS (Elastic Kubernetes Service)
+
+AWS Fargate (charged per second)
+
+Elastic Beanstalk (when using EC2 instances)
+
+Databases:
+Amazon RDS (Relational Database Service)
+
+Amazon Aurora
+
+Amazon ElastiCache
+
+Amazon Redshift (On-Demand)
+
+Networking:
+AWS VPN
+
+AWS Direct Connect (port-hours)
+
+Global Accelerator
+
+Analytics:
+Amazon EMR (Elastic MapReduce)
+
+Amazon OpenSearch Service
+
+Other:
+Amazon AppStream 2.0
+
+AWS WorkSpaces
+
+AWS Glue (some jobs)
+
+📬 Services Charged Per Request
+These services charge based on the number of API calls, transactions, or operations performed:
+
+Serverless & Compute:
+AWS Lambda
+
+AWS Step Functions
+
+Amazon API Gateway
+
+Storage & Transfer:
+Amazon S3 (for PUT, GET, LIST requests, etc.)
+
+Amazon Glacier / S3 Glacier (retrieval requests)
+
+Database:
+Amazon DynamoDB (for reads/writes)
+
+Amazon Athena (charged per query scanned)
+
+Messaging:
+Amazon SQS (per request)
+
+Amazon SNS (per publish/request)
+
+Monitoring & Management:
+AWS CloudTrail (per event delivery to CloudWatch or S3)
+
+Amazon CloudWatch (for metrics, API calls, logs ingestion)
+
+Machine Learning:
+Amazon Rekognition (per image or video request)
+
+Amazon Polly (per character converted)
+
+Amazon Comprehend / Translate / Textract / Lex (per request)
